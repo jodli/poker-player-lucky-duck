@@ -103,22 +103,22 @@ class Player {
       console.error("pair only check");
     } else if (havePair > 1) {
       console.error("raise when 2 pairs");
-      raise += gameState["minimum_raise"] + Math.round(me["stack"] * .05);
+      raise += gameState["minimum_raise"] + 50;
     }
     if (haveTriple > 0) {
       console.error("triple yeah");
-      raise += gameState["minimum_raise"] + Math.round(me["stack"] * .05);
+      raise += gameState["minimum_raise"] + 100;
     }
 
     // if full house
     if (havePair >= 1 && haveTriple >= 1) {
-      raise += gameState["minimum_raise"] + Math.round(me["stack"] * .1);
+      raise += gameState["minimum_raise"] + 150;
     }
 
     haveSameColors = colors['clubs'] >= 4 || colors['diamonds'] >= 4 || colors['hearts'] >= 4 || colors['spades'] >= 4;
 
     if (haveSameColors) {
-      raise += gameState["minimum_raise"] + Math.round(me["stack"] * .05);
+      raise += gameState["minimum_raise"] + 50;
     }
 
     if (gameState["community_cards"].length == 3) {
