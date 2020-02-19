@@ -79,7 +79,8 @@ class Player {
 
     for (let card in cards) {
       if (cards[card] > 2) {
-        raise += gameState["minimum_raise"] + 200;
+        console.error("triple yeah");
+        raise += gameState["minimum_raise"] + 100;
       }
     }
 

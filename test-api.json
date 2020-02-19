@@ -24,7 +24,7 @@
             "name": "Bob",
             "status": "active",
             "version": "Default random player",
-            "stack": 5,
+            "stack": 5000,
             "bet": 80,
             "hole_cards": [
                 {
@@ -52,7 +52,7 @@
             "suit": "spades"
         },
         {
-            "rank": "A",
+            "rank": "4",
             "suit": "hearts"
         },
         {
