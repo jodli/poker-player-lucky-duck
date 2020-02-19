@@ -19,7 +19,9 @@ class Player {
     var hand = me["hole_cards"];
 
     if (this.havePair(hand)) {
+      console.error("We have a pair.");
       raise += gameState["minimum_raise"];
+      console.error("Raise by: " + raise);
     }
 
     var bid = check + raise;
