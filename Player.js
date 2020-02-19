@@ -88,12 +88,20 @@ class Player {
       }
     }
 
-    if (havePair > 0) {
+    if (havePair == 1) {
       console.error("pair only check");
+    } else if (havePair > 1) {
+      console.error("raise when 2 pairs");
+      raise += gameState["minimum_raise"] + me["stack"] * .05;
     }
     if (haveTriple > 0) {
       console.error("triple yeah");
-      raise += gameState["minimum_raise"] + 100;
+      raise += gameState["minimum_raise"] + me["stack"] * .05;
+    }
+
+    // if full house
+    if (havePair >= 1 && haveTriple >= 1) {
+      raise += gameState["minimum_raise"] + me["stack"] * .1;
     }
 
     if (gameState["community_cards"].length == 3) {
