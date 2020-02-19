@@ -1,6 +1,6 @@
 class Player {
   static get VERSION() {
-    return 'Default C# folding player';
+    return '0.0.8-beat_go_team';
   }
   static countCards(gameState) {
     var cards = {
@@ -64,26 +64,45 @@ class Player {
     var check = gameState["current_buy_in"] - me["bet"];
     var raise = 0;
 
-    if (this.havePair(hand)) {
-      console.error("We have a pair.");
-      var number = Number(hand[0]["rank"]);
-      if (number >= 2 && number <= 10) {
-        console.error("Got a number pair.");
-        raise += gameState["minimum_raise"];
-      } else {
-        console.error("Got a people pair.");
-        raise += gameState["minimum_raise"] + 100;
-      }
-      console.error("Raise by: " + raise);
-    }
+    // if (this.havePair(hand)) {
+    //   console.error("We have a pair.");
+    //   var number = Number(hand[0]["rank"]);
+    //   if (number >= 2 && number <= 10) {
+    //     console.error("Got a number pair.");
+    //     raise += gameState["minimum_raise"];
+    //   } else {
+    //     console.error("Got a people pair.");
+    //     raise += gameState["minimum_raise"] + 100;
+    //   }
+    //   console.error("Raise by: " + raise);
+    // }
+
+    var havePair = 0;
+    var haveTriple = 0;
 
     for (let card in cards) {
-      if (cards[card] > 2) {
-        console.error("triple yeah");
-        raise += gameState["minimum_raise"] + 100;
+      if (cards[card] == 2) {
+        havePair++;
+      } else if (cards[card] >= 3) {
+        haveTriple++;
       }
     }
 
+    if (havePair > 0) {
+      console.error("pair only check");
+    }
+    if (haveTriple > 0) {
+      console.error("triple yeah");
+      raise += gameState["minimum_raise"] + 100;
+    }
+
+    if (gameState["community_cards"].length == 3) {
+      if (!(havePair > 0 || haveTriple > 0)) {
+        console.error("fold because no pair/triple with flop");
+        bet(0);
+        return;
+      }
+    }
 
     var bid = check + raise;
     bid = this.capRaise(bid, me["stack"]);
