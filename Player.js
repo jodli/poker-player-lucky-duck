@@ -1,12 +1,34 @@
 class Player {
   static get VERSION() {
-    return 'Go go Power Rangers!';
+    return 'Default C# folding player';
+  }
+
+  static havePair(hand) {
+    console.error("Check if pair: ");
+    console.error("hand[0]: " + hand[0]["rank"] + " " + hand[0]["suit"]);
+    console.error("hand[1]: " + hand[1]["rank"] + " " + hand[1]["suit"]);
+    return hand[0]["rank"] == hand[1]["rank"];
   }
 
   static betRequest(gameState, bet) {
-    var check = gameState["current_buy_in"] - gameState["players"][gameState["in_action"]]["bet"];
-    console.error("betRequest: " + check);
-    bet(check);
+    var me = gameState["players"][gameState["in_action"]];
+
+    var check = gameState["current_buy_in"] - me["bet"];
+    var raise = 0;
+
+    var hand = me["hole_cards"];
+
+    if (this.havePair(hand)) {
+      raise += gameState["minimum_raise"];
+    }
+
+    var bid = check + raise;
+    if (bid > me["stack"]) {
+      console.error("ALL IN! WOHOO!");
+      bid = me["stack"];
+    }
+    console.error("bidding: " + bid);
+    bet(bid);
   }
 
   static showdown(gameState) {
