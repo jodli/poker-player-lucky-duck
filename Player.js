@@ -20,17 +20,30 @@ class Player {
 
     if (this.havePair(hand)) {
       console.error("We have a pair.");
-      raise += gameState["minimum_raise"];
+      var number = Number(hand[0]["rank"]);
+      if (number >= 2 && number <= 10) {
+        console.error("Got a number pair.");
+        raise += gameState["minimum_raise"];
+      } else {
+        console.error("Got a people pair.");
+        raise += gameState["minimum_raise"] + 100;
+      }
       console.error("Raise by: " + raise);
     }
 
     var bid = check + raise;
-    if (bid > me["stack"]) {
-      console.error("ALL IN! WOHOO!");
-      bid = me["stack"];
-    }
+    bid = this.capRaise(bid, me["stack"]);
+
     console.error("bidding: " + bid);
     bet(bid);
+  }
+
+  static capRaise(bid, stack) {
+    if (bid > stack) {
+      console.error("ALL IN! WOHOO!");
+      bid = stack;
+    }
+    return bid;
   }
 
   static showdown(gameState) {
