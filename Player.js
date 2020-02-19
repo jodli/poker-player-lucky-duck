@@ -30,6 +30,26 @@ class Player {
 
     return cards;
   }
+  static countColors(gameState) {
+    var colors = {
+      'spades': 0,
+      'hearts': 0,
+      'clubs': 0,
+      'diamonds': 0
+    }
+    var me = gameState["players"][gameState["in_action"]];
+    var hand = me["hole_cards"];
+
+    colors[hand[0]["suit"]] += 1;
+    colors[hand[1]["suit"]] += 1;
+
+
+    gameState["community_cards"].forEach(element => {
+      colors[element["suit"]] += 1;
+    });
+
+    return colors;
+  }
 
   static havePair(hand) {
     console.error("Check if pair: ");
@@ -46,10 +66,14 @@ class Player {
 
   static betRequest(gameState, bet) {
     var cards = this.countCards(gameState);
+    var colors = this.countColors(gameState);
     var me = gameState["players"][gameState["in_action"]];
     var hand = me["hole_cards"];
 
-    if (!this.havePair(hand)) {
+    var haveSameColors = colors['clubs'] >= 2 || colors['diamonds'] >= 2 || colors['hearts'] >= 2 || colors['spades'] >= 2;
+
+    if (!this.havePair(hand) && !haveSameColors) {
+      console.error("No pair or no colors.");
       var number = Number(hand[0]["rank"]);
       if ((number >= 2 && number <= 10)) {
         var number = Number(hand[1]["rank"]);
@@ -63,19 +87,6 @@ class Player {
 
     var check = gameState["current_buy_in"] - me["bet"];
     var raise = 0;
-
-    // if (this.havePair(hand)) {
-    //   console.error("We have a pair.");
-    //   var number = Number(hand[0]["rank"]);
-    //   if (number >= 2 && number <= 10) {
-    //     console.error("Got a number pair.");
-    //     raise += gameState["minimum_raise"];
-    //   } else {
-    //     console.error("Got a people pair.");
-    //     raise += gameState["minimum_raise"] + 100;
-    //   }
-    //   console.error("Raise by: " + raise);
-    // }
 
     var havePair = 0;
     var haveTriple = 0;
@@ -102,6 +113,12 @@ class Player {
     // if full house
     if (havePair >= 1 && haveTriple >= 1) {
       raise += gameState["minimum_raise"] + me["stack"] * .1;
+    }
+
+    haveSameColors = colors['clubs'] >= 4 || colors['diamonds'] >= 4 || colors['hearts'] >= 4 || colors['spades'] >= 4;
+
+    if (haveSameColors) {
+      raise += gameState["minimum_raise"] + me["stack"] * .05;
     }
 
     if (gameState["community_cards"].length == 3) {
