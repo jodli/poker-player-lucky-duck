@@ -17,9 +17,14 @@ app.post('/', (req, res) => {
       res.send(Player.VERSION);
       break;
     case 'bet_request':
-      Player.betRequest(JSON.parse(game_state), function(bet) {
-        res.json(bet);
-      });
+      try {
+        Player.betRequest(JSON.parse(game_state), function (bet) {
+          res.json(bet);
+        });
+      } catch (error) {
+        console.error(error);
+        res.json(0);
+      }
       break;
     case 'showdown':
       Player.showdown(JSON.parse(game_state));
